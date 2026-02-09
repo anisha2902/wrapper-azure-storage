@@ -45,7 +45,6 @@ jobs:
         with:
           terraform_wrapper: false
 
-      # 🔐 Authenticate to Azure using OIDC (no client secret needed)
       - name: Azure Login (OIDC)
         uses: azure/login@v2
         with:
