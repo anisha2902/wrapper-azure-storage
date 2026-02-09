@@ -52,7 +52,6 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Export ARM_* so the AzureRM provider can use OIDC
       - name: Set Terraform Azure OIDC env
         run: |
           echo "ARM_USE_OIDC=true" >> "$GITHUB_ENV"
