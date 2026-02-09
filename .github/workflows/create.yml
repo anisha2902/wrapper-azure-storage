@@ -59,29 +59,34 @@ jobs:
           echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> "$GITHUB_ENV"
           echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> "$GITHUB_ENV"
 
-      - name: Cache Terraform
+      # 🔒 Keep only provider plugin cache; DO NOT cache .terraform/modules to avoid stale modules
+      - name: Cache Terraform provider plugins
         uses: actions/cache@v4
         with:
-          path: |
-            storage-account/.terraform
-            ~/.terraform.d/plugin-cache
-          key: terraform-${{ runner.os }}-${{ hashFiles('storage-account/**/*.tf') }}-${{ hashFiles('env/**/*.tfvars') }}
+          path: ~/.terraform.d/plugin-cache
+          key: provider-cache-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
           restore-keys: |
-            terraform-${{ runner.os }}-
+            provider-cache-${{ runner.os }}-
+
+      # 🧹 Defensive cleanup in case anything sneaks in
+      - name: Clean local Terraform dirs
+        run: |
+          rm -rf .terraform .terraform.lock.hcl
 
       - name: Terraform Format (apply)
         run: terraform fmt -recursive
 
-      - name: Terraform Init
-        run: terraform init -reconfigure
+      # 🚀 Force-refresh providers and modules (fixes the azuredemosa issue)
+      - name: Terraform Init (force upgrade)
+        env:
+          TF_PLUGIN_CACHE_DIR: ~/.terraform.d/plugin-cache
+        run: terraform init -upgrade -reconfigure
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan (dev)
         run: terraform plan -out=tfplan -var-file=../env/dev.tfvars
-        
 
       - name: Terraform Apply (dev)
-        if: github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
