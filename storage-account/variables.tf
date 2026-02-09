@@ -17,3 +17,7 @@ variable "account_replication_type" {
   type    = string
   default = "GRS"
 }
+
+variable "ssh_public_key" {
+  type    = string
+}
