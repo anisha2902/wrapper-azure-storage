@@ -80,6 +80,7 @@ jobs:
 
       - name: Terraform Plan (dev)
         run: terraform plan -out=tfplan -var-file=../env/dev.tfvars
+        
 
       - name: Terraform Apply (dev)
         if: github.event_name == 'push'
