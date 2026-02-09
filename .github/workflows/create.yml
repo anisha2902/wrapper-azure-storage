@@ -24,7 +24,6 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
 
-    # This maps to the Terraform variable: var.ssh_public_key (if you need it)
     env:
       TF_VAR_ssh_public_key: ${{ secrets.TF_VAR_SSH_PUBLIC_KEY }}
 
