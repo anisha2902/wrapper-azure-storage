@@ -87,4 +87,3 @@ jobs:
       - name: Terraform Apply (dev)
         if: github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
-``
