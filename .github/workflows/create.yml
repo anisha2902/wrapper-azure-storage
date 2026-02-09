@@ -6,7 +6,7 @@ on:
     paths:
       - "storage-account/**/*.tf"
       - "env/**/*.tfvars"
-      - ".github/workflows/terraform.yml"
+      - ".github/workflows/create.yml"
   pull_request:
     branches: [ "main" ]
     paths:
