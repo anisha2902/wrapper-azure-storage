@@ -67,7 +67,6 @@ jobs:
           restore-keys: |
             provider-cache-${{ runner.os }}-
 
-      # 🧹 Defensive cleanup in case anything sneaks in
       - name: Clean local Terraform dirs
         run: |
           rm -rf .terraform .terraform.lock.hcl
